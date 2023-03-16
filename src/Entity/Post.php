@@ -42,6 +42,10 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
     private Collection $comments;
 
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $Creator = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -187,6 +191,18 @@ class Post
                 $comment->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->Creator;
+    }
+
+    public function setCreator(?User $Creator): self
+    {
+        $this->Creator = $Creator;
 
         return $this;
     }

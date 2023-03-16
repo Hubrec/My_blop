@@ -9,8 +9,18 @@
                 <p class="card-text" style="padding-bottom: 20px"> {{ post.getDescription() }} </p>
                 <p class="card-text"style="padding-bottom: 20px"> {{ post.getContent() }} </p>
                 <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ post.getCreatedAt()|date('d/m/Y') }} </cite></footer>
+                <footer class="blockquote-footer text-right">By <cite title="Source Title"> {{ post.getCreator().getEmail() }} </cite></footer>
             </div>
         </div>
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+        <div>
+
+        </div>
+
+        {% endif %}
     </div>
+
 
 {% endblock %}

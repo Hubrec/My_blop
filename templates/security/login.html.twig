@@ -1,11 +1,14 @@
-{# templates/login/index.html.twig #}
 {% extends 'base.html.twig' %}
-
-{# ... #}
 
 {% block body %}
     {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
     {% endif %}
     
     <div class="d-flex justify-content-center" style="padding-top: 50px;">
@@ -20,14 +23,15 @@
 
         <!-- Email input -->
         <div class="form-outline mb-4">
-            <label for="username">Email address</label>
-            <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}">
+            <label for="inputEmail">Email address</label>
+            <input class="form-control" type="email" value="{{ last_username }}" name="email" id="inputEmail" autocomplete="email" required autofocus>
+            {# <input type="text" id="username" name="_username" value="{{ last_username }}"> #}
         </div>
 
         <!-- Password input -->
         <div class="form-outline mb-4">
-            <label for="password">Password</label>
-            <input class="form-control" type="password" id="password" name="_password">
+            <label for="inputPassword">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
         </div>
 
         <!-- 2 column grid layout for inline styling -->
@@ -46,8 +50,7 @@
             </div>
         </div>
 
-        <input type="hidden" name="_target_path" value="/">
-
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <!-- Submit button -->
         <button type="submit" class="btn btn-outline-success btn-block mb-4">Sign in</button>
 

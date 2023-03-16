@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+    <div class="d-flex justify-content-center" style="padding-top: 50px; padding-bottom: 110px;">
+    <div class="card hover" style="max-width: 80%;">
+    <div class="card-body" style="min-width: 700px">
+    {{ form_start(newPostForm) }}
+
+        <h1 style="margin-bottom:40px;">New post</h1>
+
+        <div class="form-outline ">
+            {{ form_row(newPostForm.title) }}
+        </div>
+
+        <div class="form-outline ">
+            {{ form_row(newPostForm.description) }}
+        </div>
+
+        <div class="form-outline ">
+            {{ form_row(newPostForm.content) }}
+        </div>
+
+        <div class="form-outline ">
+            {{ form_row(newPostForm.categories) }}
+        </div>
+
+        <input type="hidden" name="_target_path" value="/posts">
+
+        <!-- Register button -->
+        <button type="submit" class="btn btn-outline-success btn-block ">Post</button>
+
+    {{ form_end(newPostForm) }}
+    </div>
+    </div>
+    </div>
+{% endblock %}

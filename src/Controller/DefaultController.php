@@ -10,9 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DefaultController extends AbstractController
 {
 
-    /**
-     * @Route("/", methods={"GET"})
-     */
+    #[Route(path: '/', name: 'home_page')]
     public function homePage(LoggerInterface $logger): Response
     {
         $logger->info('Home page is being accessed');
