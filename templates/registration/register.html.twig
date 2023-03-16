@@ -7,15 +7,42 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
-
+    <div class="d-flex justify-content-center" style="padding-top: 50px;">
+    <div class="card hover" style="max-width: 70%;">
+    <div class="card-body" style="min-width: 600px">
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
+        <h1 style="margin-bottom:20px;">Register</h1>
+
+        <p style="margin-bottom:20px;">Already have an account ?  <a href="/login"> sign in </a></p>
+
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+            {{ form_row(registrationForm.email) }}
+        </div>
+
+        <!-- Password input -->
+        <div class="form-outline mb-4">
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+        </div>
+
+        <!-- 2 column grid layout for inline styling -->
+        <div class="row mb-4">
+            <div class="col">
+            <!-- Simple link -->
+                {{ form_row(registrationForm.agreeTerms) }}
+            </div>
+        </div>
+
+        <input type="hidden" name="_target_path" value="/">
+
+        <!-- Register button -->
+        <button type="submit" class="btn btn-outline-success btn-block mb-4">Register</button>
+
     {{ form_end(registrationForm) }}
+    </div>
+    </div>
+    </div>
 {% endblock %}
