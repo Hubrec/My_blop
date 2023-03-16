@@ -1,14 +1,29 @@
 <?php
 
+namespace App\Entity;
+
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
-    private $id;
-    private $name;
-    private $posts;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'categories')]
+    private Collection $posts;
 
     public function __construct()
     {
-        $this->posts = new Colelction('Post');
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -28,18 +43,30 @@ class Category
         return $this;
     }
 
-    public function getPosts(): ?Post
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPosts(): Collection
     {
         return $this->posts;
     }
 
-    public function setPosts(?Post $posts): self
+    public function addPost(Post $post): self
     {
-        $this->posts = $posts;
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            $post->removeCategory($this);
+        }
 
         return $this;
     }
 }
-
-
-?>

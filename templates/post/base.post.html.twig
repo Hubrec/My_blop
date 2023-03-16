@@ -1,5 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Article : {{ name }}</h1>
+
+    <div class="d-flex justify-content-center" style="padding-top: 50px;">
+        <div class="card hover" style="max-width: 55%;">
+            <div class="card-body" style="min-width: 400px">
+                <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 20px"> {{ post.getTitle() }}</h5>
+                <p class="card-text" style="padding-bottom: 20px"> {{ post.getDescription() }} </p>
+                <p class="card-text"style="padding-bottom: 20px"> {{ post.getContent() }} </p>
+                <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ post.getCreatedAt()|date('d/m/Y') }} </cite></footer>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

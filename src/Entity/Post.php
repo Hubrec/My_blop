@@ -2,24 +2,50 @@
 
 namespace App\Entity;
 
+use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
-    private $id;
-    private $title;
-    private $description;
-    private $content;
-    private $slug;
-    private $createdAt;
-    private $updatedAt;
-    private $publishedAt;
-    private $comments;
-    private $categories;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 512, nullable: true)]
+    private ?string $content = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $slug = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updateAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $publishedAt = null;
+
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'posts')]
+    private Collection $categories;
+
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
+    private Collection $comments;
 
     public function __construct()
     {
-        $this->comments = new Collection('Comment');
-        $this->categories = new Category();
+        $this->categories = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -56,7 +82,7 @@ class Post
         return $this->content;
     }
 
-    public function setContent(string $content): self
+    public function setContent(?string $content): self
     {
         $this->content = $content;
 
@@ -75,36 +101,36 @@ class Post
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdateAt(): ?\DateTimeImmutable
     {
-        return $this->updatedAt;
+        return $this->updateAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdateAt(\DateTimeImmutable $updateAt): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updateAt = $updateAt;
 
         return $this;
     }
 
-    public function getPublishedAt(): ?\DateTimeInterface
+    public function getPublishedAt(): ?\DateTimeImmutable
     {
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(\DateTimeInterface $publishedAt): self
+    public function setPublishedAt(\DateTimeImmutable $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
 
@@ -112,9 +138,56 @@ class Post
     }
 
     /**
-     * @return Collection|Comment[]
+     * @return Collection<int, Category>
      */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getPost() === $this) {
+                $comment->setPost(null);
+            }
+        }
+
+        return $this;
+    }
 }
-
-
-?>

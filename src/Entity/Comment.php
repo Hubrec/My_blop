@@ -1,18 +1,32 @@
 <?php
 
-class Comment 
-{
-    private $id;
-    private $username;
-    private $content;
-    private $valid;
-    private $createdAt;
-    private $post;
+namespace App\Entity;
 
-    public function __construct()
-    {
-        $this->post = new Post();
-    }
+use App\Repository\CommentRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
+class Comment
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $username = null;
+
+    #[ORM\Column(length: 512)]
+    private ?string $content = null;
+
+    #[ORM\Column]
+    private ?bool $valid = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    private ?Post $post = null;
 
     public function getId(): ?int
     {
@@ -43,7 +57,7 @@ class Comment
         return $this;
     }
 
-    public function getValid(): ?bool
+    public function isValid(): ?bool
     {
         return $this->valid;
     }
@@ -55,12 +69,12 @@ class Comment
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -79,6 +93,3 @@ class Comment
         return $this;
     }
 }
-
-
-?>
