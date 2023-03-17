@@ -5,10 +5,15 @@
 
     <div class="d-flex flex-wrap justify-content-center" style="padding-bottom:70px">
 
+        {% if posts|length == 0 %}
+            <div class="alert alert-warning" role="alert">
+                No posts in this category yet.
+            </div>
+        {% endif %}
         {% for post in posts %}
 
             <a href="/post/{{ post.getId() }}" style="text-decoration: none; color: black; padding: 15px">
-                <div class="card hover" style="max-width: 450px; min-width: 450px">
+                <div class="card hover" style="width: 400px;">
                     <div class="card-body">
                         <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 20px"> {{ post.getTitle() }}</h5>
                         {% for category in post.getCategories() %}

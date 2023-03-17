@@ -13,6 +13,7 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
+
     <body style="height: 92vh">
     
         <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
@@ -51,7 +52,7 @@
                             My account
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Logged as {{ app.user.email }}</a>
+                            <a class="dropdown-item" href="/profile">Logged as {{ app.user.username }}</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/profile">My profile</a>
                             <a class="dropdown-item" href="/logout">Logout</a>
