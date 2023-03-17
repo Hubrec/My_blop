@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Entity\Post;
+use App\Entity\Category;
 use App\Form\NewProductFormType;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,8 @@ class PostController extends AbstractController
             );
         }
 
+        shuffle($posts);
+
         return $this -> render('post/index.post.html.twig', [
             'posts' => $posts,
         ]);
@@ -44,12 +47,19 @@ class PostController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $post = new Post();
-        $form = $this->createForm(NewProductFormType::class, $post);
+        $options = $doctrine->getRepository(Category::class)->findAll();
+        $opt = [];
+
+        foreach ($options as $option) {
+            $opt[$option->getId()] = $option->getName();
+        }
+
+        $form = $this->createForm(NewProductFormType::class, $opt);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $post = new Post();
             $post->setTitle($form->get('title')->getData());
             $post->setDescription($form->get('description')->getData());
             $post->setContent($form->get('content')->getData());
@@ -58,6 +68,11 @@ class PostController extends AbstractController
             $post->setPublishedAt(new \DateTimeImmutable());
             $post->setSlug('/post/' . '1');
             $post->setCreator($this->getUser());
+
+            for ($i = 0; $i < count($form->get('categories')->getData()); $i++) {
+                $cat = $doctrine->getRepository(Category::class)->findByName($form->get('categories')->getData()[$i])[0];
+                $post->addCategory($cat);
+            }
 
             $entityManager = $doctrine->getManager();
             $entityManager->persist($post);
@@ -68,32 +83,6 @@ class PostController extends AbstractController
 
         return $this->render('post/new.post.html.twig', [
             'newPostForm' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/post/newTest", methods={"GET"})
-     */
-    public function newTest(ManagerRegistry $doctrine, LoggerInterface $logger): Response
-    {
-        $logger->info('New post page is being accessed');
-
-        $post = new \App\Entity\Post();
-        $post->setTitle('I love pandas');
-        $post->setDescription('This post is about how much i love pandas');
-        $post->setContent('I love pandas so much that i want to eat them, but sometimes when i wake-up in the morning i feel like i want to eat a dog instead.');
-        $post->setCreatedAt(new \DateTimeImmutable());
-        $post->setUpdateAt(new \DateTimeImmutable());
-        $post->setPublishedAt(new \DateTimeImmutable());
-        $post->setSlug('/post/' . '1');
-
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($post);
-        $entityManager->flush();
-
-        return $this -> render('post/base.post.html.twig', [
-            'post' => $post,
         ]);
     }
 

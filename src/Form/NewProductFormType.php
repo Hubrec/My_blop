@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
 class NewProductFormType extends AbstractType
@@ -45,7 +46,7 @@ class NewProductFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('content', TextType::class, [
+            ->add('content', TextareaType::class, [
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([
@@ -61,11 +62,8 @@ class NewProductFormType extends AbstractType
             ])
             ->add('categories', ChoiceType::class, [
                 'mapped' => false,
-                'choices' => [
-                    'Yes' => 'yes',
-                    'No' => 'no',
-                    'Maybe' => 'maybe',
-                ],
+                'multiple' => true,
+                'choices' => array_combine($options['data'], $options['data']),
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Your post should have at least one category',
@@ -78,7 +76,7 @@ class NewProductFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Post::class,
+            'data_class' => null,
         ]);
     }
 }

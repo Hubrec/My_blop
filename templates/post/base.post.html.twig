@@ -5,8 +5,11 @@
     <div class="d-flex justify-content-center" style="padding-top: 50px;">
         <div class="card hover" style="max-width: 55%;">
             <div class="card-body" style="min-width: 400px">
-                <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 20px"> {{ post.getTitle() }}</h5>
-                <p class="card-text" style="padding-bottom: 20px"> {{ post.getDescription() }} </p>
+                <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 15px"> {{ post.getTitle() }}</h5>
+                {% for category in post.getCategories() %}
+                    <a href="/category/{{ category.getId() }}" class="badge badge-success" style="margin-bottom:15px;">{{ category.getName() }}</a>
+                {% endfor %}
+                <p class="card-text" style="padding-bottom: 0px"> {{ post.getDescription() }} </p>
                 <p class="card-text"style="padding-bottom: 20px"> {{ post.getContent() }} </p>
                 <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ post.getCreatedAt()|date('d/m/Y') }} </cite></footer>
                 <footer class="blockquote-footer text-right">By <cite title="Source Title"> {{ post.getCreator().getEmail() }} </cite></footer>

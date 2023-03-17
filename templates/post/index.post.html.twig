@@ -3,7 +3,7 @@
 {% block body %}
     <h2 class="text-center" style="padding-top: 20px"> Tous les posts : </h2>
 
-    <div class="d-flex flex-wrap justify-content-center" style="padding-bottom:60px">
+    <div class="d-flex flex-wrap justify-content-center" style="padding-bottom:70px">
 
         {% for post in posts %}
 
@@ -11,8 +11,15 @@
                 <div class="card hover" style="max-width: 450px; min-width: 450px">
                     <div class="card-body">
                         <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 20px"> {{ post.getTitle() }}</h5>
-                        <p class="card-text" style="padding-bottom: 20px"> {{ post.getDescription() }} </p>
-                        <p class="card-text"style="padding-bottom: 20px"> {{ post.getContent() }} </p>
+                        {% for category in post.getCategories() %}
+                            <div href="/category/{{ category.getId() }}" class="badge badge-success" style="margin-bottom:15px;">{{ category.getName() }}</div>
+                        {% endfor %}
+                        <p class="card-text" style="padding-bottom: 10px"> {{ post.getDescription() }} </p>
+                        {% if post.getContent|length > 200 %}
+                            <p class="card-text" style="padding-bottom: 10px"> {{ post.getContent()|slice(0, 200) }}... </p>
+                        {% else %}
+                            <p class="card-text" style="padding-bottom: 10px"> {{ post.getContent() }} </p>
+                        {% endif %}
                         <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ post.getCreatedAt()|date('d/m/Y') }} </cite></footer>
                         <footer class="blockquote-footer text-right">By <cite title="Source Title"> {{ post.getCreator().getEmail() }} </cite></footer>
                     </div>

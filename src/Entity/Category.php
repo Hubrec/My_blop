@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'There is already a category with this name, try another one :)')]
 class Category
 {
     #[ORM\Id]
@@ -15,7 +16,7 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'categories')]
