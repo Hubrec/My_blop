@@ -3,13 +3,14 @@
 {% block body %}
     <h2 class="text-center" style="padding-top: 20px"> Tous les posts : </h2>
 
+    {% if posts|length == 0 %}
+        <div class="alert alert-warning" role="alert">
+            No posts for the moment.
+        </div>
+    {% endif %}
+
     <div class="d-flex flex-wrap justify-content-center" style="padding-bottom:70px">
 
-        {% if posts|length == 0 %}
-            <div class="alert alert-warning" role="alert">
-                No posts in this category yet.
-            </div>
-        {% endif %}
         {% for post in posts %}
 
             <a href="/post/{{ post.getId() }}" style="text-decoration: none; color: black; padding: 15px">

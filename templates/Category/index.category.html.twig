@@ -1,38 +1,67 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2 class="text-center" style="padding-top: 20px; padding-bottom: 30px"> Toutes les categories : </h2>
+    
+    {% if categories|length == 0 %}
+        <div class="alert alert-warning" role="alert">
+            No categories for now, be the first to add one !
+        </div>
 
-    <div class="d-flex flex-column align-items-center" style="padding-bottom:100px; width: 100%">
+        <div class="d-flex flex-column align-items-center" style="padding-bottom:100px; width: 100%">
+            <div class="card hover" style="width: 70%;">
+                <div class="card-body">
+                {{ form_start(newCategoryForm) }}
 
-        {% for category in categories %}
+                    <h1 style="margin-bottom:20px; font-size: 24px">Add new</h1>
 
-            <a href="/category/{{ category.getId() }}" style="text-decoration: none; color: black; padding: 5px; width: 70%">
-                <div class="card hover">
-                    <div class="card-body" style="padding: 10px 15px 5px 15px;">
-                        <p class="card-title text-center" style="font-size:18px;"> {{ category.getName() }}</p>
+                    <div class="form-outline ">
+                        {{ form_row(newCategoryForm.name) }}
                     </div>
+
+                    <!-- Register button -->
+                    <button type="submit" class="btn btn-outline-success btn-block ">Add</button>
+
+                {{ form_end(newCategoryForm) }}
                 </div>
-            </a>
-            
-        {% endfor %}
-
-        <div class="card hover" style="width: 70%;">
-            <div class="card-body">
-            {{ form_start(newCategoryForm) }}
-
-                <h1 style="margin-bottom:20px; font-size: 24px">Add new</h1>
-
-                <div class="form-outline ">
-                    {{ form_row(newCategoryForm.name) }}
-                </div>
-
-                <!-- Register button -->
-                <button type="submit" class="btn btn-outline-success btn-block ">Add</button>
-
-            {{ form_end(newCategoryForm) }}
             </div>
         </div>
-    </div>
+        
+    {% else %}
+    
+        <h2 class="text-center" style="padding-top: 20px; padding-bottom: 30px"> Toutes les categories : </h2>
+
+        <div class="d-flex flex-column align-items-center" style="padding-bottom:100px; width: 100%">
+
+            {% for category in categories %}
+
+                <a href="/category/{{ category.getId() }}" style="text-decoration: none; color: black; padding: 5px; width: 70%">
+                    <div class="card hover">
+                        <div class="card-body" style="padding: 10px 15px 5px 15px;">
+                            <p class="card-title text-center" style="font-size:18px;"> {{ category.getName() }}</p>
+                        </div>
+                    </div>
+                </a>
+                
+            {% endfor %}
+
+            <div class="card hover" style="width: 70%;">
+                <div class="card-body">
+                {{ form_start(newCategoryForm) }}
+
+                    <h1 style="margin-bottom:20px; font-size: 24px">Add new</h1>
+
+                    <div class="form-outline ">
+                        {{ form_row(newCategoryForm.name) }}
+                    </div>
+
+                    <!-- Register button -->
+                    <button type="submit" class="btn btn-outline-success btn-block ">Add</button>
+
+                {{ form_end(newCategoryForm) }}
+                </div>
+            </div>
+        </div>
+    
+    {% endif %}    
 
 {% endblock %}

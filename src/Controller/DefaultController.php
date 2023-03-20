@@ -20,25 +20,6 @@ class DefaultController extends AbstractController
             'controller_name' => 'DefaultController',
         ]);
     }
-
-    #[Route(path:"/profile", name: 'profile_page')]
-    public function profilePage(ManagerRegistry $doctrine, LoggerInterface $logger): Response
-    {
-        $logger->info('Profile page is being accessed');
-
-        if ($this->getUser() === null) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        $user = $this->getUser();
-
-
-
-        return $this -> render('default/user.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
 }
 
 ?>
