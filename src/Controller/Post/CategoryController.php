@@ -42,7 +42,7 @@ class CategoryController extends AbstractController
             }
 
             for ($i = 0; $i < count($categories); $i++) {
-                if ($categories[$i]->getName() === $form->get('name')->getData()) {
+                if (strtoupper($categories[$i]->getName()) === strtoupper($form->get('name')->getData())) {
                     return $this->redirectToRoute('categories_browse');
                 }
             }
@@ -81,7 +81,7 @@ class CategoryController extends AbstractController
             $categories = $categoryRepository->findAll();
 
             for ($i = 0; $i < count($categories); $i++) {
-                if ($categories[$i]->getName() === $form->get('name')->getData()) {
+                if (strtoupper($categories[$i]->getName()) === strtoupper($form->get('name')->getData())) {
                     return $this->redirectToRoute('categories_browse');
                 }
             }
