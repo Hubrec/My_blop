@@ -2,27 +2,71 @@
 
 {% block body %}
 
-    <div class="d-flex justify-content-center" style="padding-top: 50px;">
-        <div class="card hover" style="margin: 10px">
-            <div class="card-body" style="max-width: 800px; min-width: 350px">
-                <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 15px"> {{ post.getTitle() }}</h5>
-                {% for category in post.getCategories() %}
-                    <a href="/category/{{ category.getId() }}" class="badge badge-success" style="margin-bottom:15px;">{{ category.getName() }}</a>
-                {% endfor %}
-                <p class="card-text" style="padding-bottom: 0px"> {{ post.getDescription() }} </p>
-                <p class="card-text"style="padding-bottom: 20px"> {{ post.getContent() }} </p>
-                <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ post.getCreatedAt()|date('d/m/Y') }} </cite></footer>
-                <footer class="blockquote-footer text-right">By <cite title="Source Title"> {{ post.getCreator().getEmail() }} </cite></footer>
+    <div class="d-flex align-items-center flex-column" style="padding-top: 50px; padding-bottom: 120px">
+        <div class="col-lg-7 col-ml-8 col-sm-9" style="">
+            <div class="card hover" style="margin: 10px">
+                <div class="card-body">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        {% if post.getCreator().getEmail() is same as (user.getEmail()) %}
+                            <a href="/post/{{ post.getId() }}/edit" class="btn btn-outline-warning" style="float: right; margin-bottom: 10px; font-size: 10px; padding: 5px">Edit</a>
+                            <a href="/post/{{ post.getId() }}/delete" class="btn btn-outline-danger" style="float: right; margin-bottom: 10px; margin-right: 5px; font-size: 10px; padding: 5px">Delete</a>
+                        {% endif %}
+                    {% endif %}
+                    <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 15px"> {{ post.getTitle() }}</h5>
+                    {% for category in post.getCategories() %}
+                        <a href="/category/{{ category.getId() }}" class="badge badge-success" style="margin-bottom:15px;">{{ category.getName() }}</a>
+                    {% endfor %}
+                    <p class="card-text" style="padding-bottom: 0px"> {{ post.getDescription() }} </p>
+                    <p class="card-text"style="padding-bottom: 20px"> {{ post.getContent() }} </p>
+                    <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ post.getCreatedAt()|date('d/m/Y') }} </cite></footer>
+                    <footer class="blockquote-footer text-right">By <cite title="Source Title"> {{ post.getCreator().getEmail() }} </cite></footer>
+                </div>
             </div>
+
+            <h3 style="margin-bottom: 20px; margin-top: 20px; margin-left: 10px">Comments ({{ comments|length }})</h3>
+
+            {% if comments|length > 0 %}
+
+                {% for comment in comments %}
+
+                    <div class="card hover" style="margin: 6px">
+                        <div class="card-body" style="padding: 10px 15px 5px 15px;">
+                            <p class="card-title text-center" style="font-size:15px;"> {{ comment.getContent() }}</p>
+                            <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ comment.getCreatedAt()|date('d/m/Y') }} </cite></footer>
+                            <footer class="blockquote-footer text-right">By <cite title="Source Title"> {{ comment.getUsername() }} </cite></footer>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="alert alert-warning" role="alert">
+                    No comments for now, be the first to add one !
+                </div>
+
+            {% endif %}
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div class="card hover" style="margin-top: 10px; margin-left: 4px; margin-right: 4px">
+                    <div class="card-body">
+
+                    {{ form_start(commentForm) }}
+
+                        <h1 style="margin-bottom:20px; font-size: 24px">Add a comment</h1>
+
+                        <div class="form-outline ">
+                            {{ form_row(commentForm.content) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-success btn-block ">Comment</button>
+
+                    {{ form_end(commentForm) }}
+
+                    </div>
+                </div>
+            {% endif %}
         </div>
-
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-
-        <div>
-
-        </div>
-
-        {% endif %}
     </div>
 
 
