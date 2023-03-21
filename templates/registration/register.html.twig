@@ -15,10 +15,6 @@
         <h1 style="margin-bottom:20px;">Register</h1>
 
         <p style="margin-bottom:20px;">Already have an account ?  <a href="/login"> sign in </a></p>
-
-        <div class="form-outline mb-4">
-            {{ form_row(registrationForm.username) }}
-        </div>
         
         <!-- Email input -->
         <div class="form-outline mb-4">
@@ -30,6 +26,10 @@
             {{ form_row(registrationForm.plainPassword, {
                 label: 'Password'
             }) }}
+        </div>
+
+        <div class="form-outline mb-4">
+            {{ form_row(registrationForm.username) }}
         </div>
 
         <!-- 2 column grid layout for inline styling -->
