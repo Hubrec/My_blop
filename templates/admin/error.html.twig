@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="alert alert-warning" role="alert">
+        Oops! Something went wrong. It seems that you aren't admin because your currents roles is ( {{ user.getRoles()[0]|lower }} ), try to login as admin.
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center" style="height: 60vh; width: 100vw">
+        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger" style="margin-right: 30px">Logout</a>
+        <a href="{{ path('home_page') }}" class="btn btn-outline-success">Go back</a>
+    </div>
+{% endblock %}

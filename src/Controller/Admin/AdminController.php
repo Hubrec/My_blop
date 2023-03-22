@@ -6,54 +6,43 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Post;
+use App\Entity\Category;
+use App\Entity\User;
 
 class AdminController extends AbstractController
 {
-    /**
-     * @Route("/admin/{name}", methods={"GET"})
-     */
-    public function index(LoggerInterface $logger, string $name): Response
+    
+    #[Route('/admin', name: 'admin')]
+    public function index(ManagerRegistry $doctrine, LoggerInterface $logger): Response
     {
-        $logger->info('Admin/'. $name . ' page is being accessed');
+        $logger->info('I just got the logger');
 
-        return $this -> render('admin/base.admin.html.twig', [
-            'name' => $name,
-        ]);
-    }
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
 
-    /**
-     * @Route("/admin/posts", methods={"GET"})
-     */
-    public function adminPosts(LoggerInterface $logger): Response
-    {
-        $logger->info('Admin/posts page is being accessed');
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->render('admin/error.html.twig', [
+                'user' => $this->getUser(),
+            ]);
+        }
 
-        return $this -> render('admin/base.admin.html.twig', [
-            'name' => 'posts',
-        ]);
-    }
+        $postRepository = $doctrine->getRepository(\App\Entity\Post::class);
+        $posts = $postRepository->findAll();
 
-    /**
-     * @Route("/admin/categories", methods={"GET"})
-     */
-    public function adminCategories(LoggerInterface $logger): Response
-    {
-        $logger->info('Admin/categories page is being accessed');
+        $categoryRepository = $doctrine->getRepository(\App\Entity\Category::class);
+        $categories = $categoryRepository->findAll();
 
-        return $this -> render('admin/base.admin.html.twig', [
-            'name' => 'categories',
-        ]);
-    }
+        $userRepository = $doctrine->getRepository(\App\Entity\User::class);
+        $users = $userRepository->findAll();
 
-    /**
-     * @Route("/admin/commentaires", methods={"GET"})
-     */
-    public function adminCommentaires(LoggerInterface $logger): Response
-    {
-        $logger->info('Admin/commentaires page is being accessed');
 
-        return $this -> render('admin/base.admin.html.twig', [
-            'name' => 'commentaires',
+        return $this->render('admin/index.html.twig', [
+            'posts' => $posts,
+            'categories' => $categories,
+            'users' => $users,
         ]);
     }
 }
