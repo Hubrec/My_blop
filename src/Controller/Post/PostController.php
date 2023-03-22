@@ -207,10 +207,6 @@ class PostController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        if ($this->getUser()->getId() !== $post->getCreator()->getId() && $this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
-            return $this->redirectToRoute('post_show', ['id' => $id]);
-        }
-
         $postRepository = $doctrine->getRepository(\App\Entity\Post::class);
         $post = $postRepository->find($id);
 
@@ -219,6 +215,10 @@ class PostController extends AbstractController
                 'No post found for id '. $id
             );
         }
+
+        if ($this->getUser()->getId() !== $post->getCreator()->getId() && $this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
+            return $this->redirectToRoute('post_show', ['id' => $id]);
+        }        
 
         $entityManager = $doctrine->getManager();
         $entityManager->remove($post);

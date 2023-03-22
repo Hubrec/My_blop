@@ -114,8 +114,47 @@ class CategoryController extends AbstractController
             );
         }
 
+        $user = $this->getUser();
+
         return $this -> render('category/show.category.html.twig', [
             'category' => $category,
+            'user' => $user,
         ]);
+    }
+
+    #[Route('/category/{id}/delete', name: 'category_edit')]
+    public function edit(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
+    {
+        $logger->info('category delete page is being accessed');
+
+        if ($this->getUser() === null) {
+            return $this->redirectToRoute('categories_browse');
+        }
+
+        if ($this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
+            return $this->redirectToRoute('categories_browse');
+        }
+
+        $categoryRepository = $doctrine->getRepository(Category::class);
+        $category = $categoryRepository->find($id);
+
+        if (!$category) {
+            throw $this->createNotFoundException(
+                'No category found for id '. $id
+            );
+        }
+
+        $entityManager = $doctrine->getManager();
+
+        $posts = $category->getPosts();
+        for ($i = 0; $i < count($posts); $i++) {
+            $posts[$i]->removeCategory($category);
+            $entityManager->persist($posts[$i]);
+        }
+
+        $entityManager->remove($category);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('categories_browse');
     }
 }

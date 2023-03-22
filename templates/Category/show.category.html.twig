@@ -1,9 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-    <h2 class="text-center" style="padding-top: 20px; padding-bottom: 30px">{{ category.name }}</h2>
-    
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if user.getRoles()[0] == 'ROLE_ADMIN' %} 
+            <div class="d-flex align-items-center justify-content-center">
+                <h2 class="text-center" style="padding-top: 30px; padding-bottom: 30px">{{ category.name }}</h2>
+                <a href="/category/{{ category.getId() }}/delete" class="btn btn-outline-danger" style="margin-left:60px">Delete</a>        
+            </div>
+        {% endif %}    
+    {% else %}
+        <h2 class="text-center" style="padding-top: 20px; padding-bottom: 30px">{{ category.name }}</h2>
+    {% endif %}
     <div class="d-flex flex-wrap justify-content-center" style="padding-bottom:70px">
     
     {% if category.getPosts()|length == 0 %}
