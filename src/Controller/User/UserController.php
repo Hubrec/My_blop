@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Form\EditUserFormType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\User;
+
 
 class UserController extends AbstractController
 {
@@ -59,6 +61,52 @@ class UserController extends AbstractController
         return $this -> render('user/user.edit.html.twig', [
             'editUserForm' => $form->createView(),
         ]);
+    }
+
+    #[Route('/user/{id}/delete', name: 'user_delete')]
+    public function deleteUser(ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
+    {
+        $logger->info('Delete user ' . $id . ' page is being accessed');
+
+        if ($this->getUser() === null) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
+            return $this->redirectToRoute('home_page');
+        }
+
+        $userRepository = $doctrine->getRepository(\App\Entity\User::class);
+        $user = $userRepository->find($id);
+
+        if ($user === null) {
+            return $this->redirectToRoute('admin');
+        }
+
+        if ($user->getRoles()[0] === 'ROLE_ADMIN') {
+            return $this->redirectToRoute('admin');
+        }
+
+        if ($user->getPosts() !== null) {
+            foreach ($user->getPosts() as $post) {                
+                if ($post->getComments() !== null) {
+                    foreach ($post->getComments() as $comment) {
+                        $entityManager = $doctrine->getManager();
+                        $entityManager->remove($comment);
+                        $entityManager->flush();
+                    }
+                }
+                $entityManager = $doctrine->getManager();
+                $entityManager->remove($post);
+                $entityManager->flush();
+            }
+        }
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('admin');
     }
 
 }

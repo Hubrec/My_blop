@@ -35,8 +35,11 @@
             {% for user in users %}
                 <div style="padding:5px">
                     <div class="card hover">
-                        <div class="card-body" style="padding: 10px 15px 5px 15px;">
-                            <p class="card-title text-center" style="font-size:1(px;"> {{ user.getEmail() }}</p>
+                        <div class="card-body d-flex align-items-center" style="padding: 10px 15px 5px 15px;">
+                            <p class="card-title text-center col-11" style="font-size:1(px;"> {{ user.getEmail() }}</p>
+                            {% if user.getRoles()[0] != 'ROLE_ADMIN' %}
+                                <a href="/user/{{ user.getId() }}/delete" class="btn btn-outline-danger" style="font-size: 10px; padding: 5px; height: 26px; position: relative; bottom: 4px; right: 8px">Delete</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

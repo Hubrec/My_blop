@@ -34,7 +34,7 @@
                             {% if is_granted('IS_AUTHENTICATED_FULLY') and user.getRoles()[0] == 'ROLE_ADMIN'%}
                                 <div class="d-flex align-items-center">
                                     <p class="card-title text-center col-10 col-md-11 col-lg-11 col-xl-11" style="font-size:15px;"> {{ comment.getContent() }}</p>
-                                    <a href="/comment/{{  comment.getId() }}/delete" class="btn btn-outline-danger" style="float: right; margin-bottom: 10px; margin-left: 10px; font-size: 10px; padding: 5px; height: 26px">Delete</a>
+                                    <a href="/comment/{{  comment.getId() }}/delete" class="btn btn-outline-danger" style="margin-bottom: 10px; margin-left: 10px; font-size: 10px; padding: 5px; height: 26px">Delete</a>
                                 </div>
                             {% else %}
                                 <p class="card-title text-center" style="font-size:15px;"> {{ comment.getContent() }}</p>
