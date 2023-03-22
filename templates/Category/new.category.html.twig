@@ -1,18 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="d-flex flex-column align-items-center" style="padding-top:70px; height:100%; width: 100%">
-        <div class="card hover" style="width: 60%;">
+    <div class="d-flex flex-column align-items-center" style="padding-top:70px; width: 100%">
+        <div class="card hover col-11 col-md-9 col-lg-8 col-xl-6">
             <div class="card-body">
             {{ form_start(newCategoryForm) }}
 
-                <h1 style="margin-bottom:20px; font-size: 24px">Add new</h1>
+                <h1 style="margin-bottom:20px; font-size: 24px">Add new category</h1>
 
                 <div class="form-outline ">
                     {{ form_row(newCategoryForm.name) }}
                 </div>
 
-                <!-- Register button -->
                 <button type="submit" class="btn btn-outline-success btn-block ">Add</button>
 
             {{ form_end(newCategoryForm) }}
