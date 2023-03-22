@@ -1,13 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        {% if user.getRoles()[0] == 'ROLE_ADMIN' %} 
-            <div class="d-flex align-items-center justify-content-center">
-                <h2 class="text-center" style="padding-top: 30px; padding-bottom: 30px">{{ category.name }}</h2>
-                <a href="/category/{{ category.getId() }}/delete" class="btn btn-outline-danger" style="margin-left:60px">Delete</a>        
-            </div>
-        {% endif %}    
+    {% if is_granted('IS_AUTHENTICATED_FULLY') and user.getRoles()[0] == 'ROLE_ADMIN' %}
+        <div class="d-flex align-items-center justify-content-center">
+            <h2 class="text-center" style="padding-top: 30px; padding-bottom: 30px">{{ category.name }}</h2>
+            <a href="/category/{{ category.getId() }}/delete" class="btn btn-outline-danger" style="margin-left:60px">Delete</a>        
+        </div>
     {% else %}
         <h2 class="text-center" style="padding-top: 20px; padding-bottom: 30px">{{ category.name }}</h2>
     {% endif %}

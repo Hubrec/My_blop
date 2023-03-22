@@ -218,13 +218,50 @@ class PostController extends AbstractController
 
         if ($this->getUser()->getId() !== $post->getCreator()->getId() && $this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
             return $this->redirectToRoute('post_show', ['id' => $id]);
-        }        
+        }
+
+        if ($post->getComments() !== null) {
+            foreach ($post->getComments() as $comment) {
+                $entityManager = $doctrine->getManager();
+                $entityManager->remove($comment);
+                $entityManager->flush();
+            }
+        }
 
         $entityManager = $doctrine->getManager();
         $entityManager->remove($post);
         $entityManager->flush();
 
         return $this->redirectToRoute('posts');
+    }
+
+    #[Route('/comment/{id}/delete', name: 'comment_delete')]
+    public function deleteComment(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
+    {
+        $logger->info('Comment/'. $id . ' delete page is being accessed');
+
+        if ($this->getUser() === null) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $commentRepository = $doctrine->getRepository(\App\Entity\Comment::class);
+        $comment = $commentRepository->find($id);
+
+        if (!$comment) {
+            throw $this->createNotFoundException(
+                'No comment found for id '. $id
+            );
+        }
+
+        if ($this->getUser()->getId() !== $comment->getPost()->getCreator()->getId() && $this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
+            return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
+        }        
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->remove($comment);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
     }
 }
 
