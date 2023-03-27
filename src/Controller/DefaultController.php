@@ -27,9 +27,16 @@ class DefaultController extends AbstractController
     {
         $logger->info('Research page is being accessed');
 
-        if($request->isMethod('POST')){
+        if($request->isMethod('POST')) {
             
             $prompt = $request->request->get('search');
+
+            if (empty($prompt)) {
+                return $this -> render('post/index.post.html.twig', [
+                    'posts' => [],
+                    'mode' => 1,
+                ]);
+            }
 
             $postRepository = $doctrine->getRepository(\App\Entity\Post::class);
             $posts = $postRepository->findAll();
@@ -40,10 +47,14 @@ class DefaultController extends AbstractController
                 }
             }
     
-            shuffle($posts);
+            usort($posts, function ($a, $b) {
+                return $a->getUpdateAt() <=> $b->getUpdateAt();
+            });
+            $posts = array_reverse($posts);
 
             return $this -> render('post/index.post.html.twig', [
                 'posts' => $posts,
+                'mode' => 1,
             ]);
         }
     }
