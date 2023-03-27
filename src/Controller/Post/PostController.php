@@ -96,7 +96,35 @@ class PostController extends AbstractController
             );
         }
 
+        $votes = 0;
+        foreach ($post->getVotes() as $vote) {
+            if ($vote->isState()) {
+                $votes++;
+            } else {
+                $votes--;
+            }
+        }
+
         $user = $this->getUser();
+
+        if ($user !== null) {
+            foreach ($post->getVotes() as $vote) {
+                if ($vote->getUser() === $user) {
+                    if ($vote->isState()) {
+                        $upVoted = true;
+                        $downVoted = false;
+                    } else {
+                        $upVoted = false;
+                        $downVoted = true;
+                    }
+                }
+            }
+        }
+
+        if (!isset($upVoted)) {
+            $upVoted = false;
+            $downVoted = false;
+        }
 
         $commentRepository = $doctrine->getRepository(\App\Entity\Comment::class);
         $comments = $commentRepository->findBy(['post' => $post]);
@@ -128,6 +156,9 @@ class PostController extends AbstractController
             'post' => $post,
             'user' => $user,
             'comments' => $comments,
+            'votes' => $votes,
+            'upVoted' => $upVoted,
+            'downVoted' => $downVoted,
             'commentForm' => $form->createView(),
         ]);
     }

@@ -54,13 +54,15 @@ class VoteRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Vote
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   public function findOneByUserAndPost($value): ?Vote
+   {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.Post = :val')
+            ->setParameter('val', $value['Post'])
+            ->andWhere('v.User = :val2')
+            ->setParameter('val2', $value['User'])
+            ->getQuery()
+            ->getOneOrNullResult()
+       ;
+   }
 }

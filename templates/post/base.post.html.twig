@@ -6,6 +6,31 @@
         <div class="col-lg-7 col-ml-8 col-sm-9" style="">
             <div class="card hover" style="margin: 10px">
                 <div class="card-body">
+                    <div class="d-flex flex-column" style="float: left; position: relative; left: 10px">
+                        <a href="/post/{{ post.getId() }}/upvote" style="text-decoration: none; color: black">
+                            {% if upVoted %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                </svg>
+                            {% endif %}
+                        </a>
+                        <a href="/post/{{ post.getId() }}/downvote" style="text-decoration: none; color: black">
+                            <p class="text-center" style="font-size: 12px; margin: 0;">{{ votes }}</p>
+                            {% if downVoted %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.325 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                </svg>
+                            {% endif %}
+                        </a>
+                    </div>
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         {% if post.getCreator().getEmail() is same as (user.getEmail()) or user.getRoles()[0] == 'ROLE_ADMIN' %}
                             <a href="/post/{{ post.getId() }}/edit" class="btn btn-outline-warning" style="float: right; margin-bottom: 10px; font-size: 10px; padding: 5px">Edit</a>
@@ -13,9 +38,11 @@
                         {% endif %}
                     {% endif %}
                     <h5 class="card-title text-center" style="font-size:24px; padding-bottom: 15px"> {{ post.getTitle() }}</h5>
-                    {% for category in post.getCategories() %}
-                        <a href="/category/{{ category.getId() }}" class="badge badge-success" style="margin-bottom:15px;">{{ category.getName() }}</a>
-                    {% endfor %}
+                    <div class="d-flex justify-content-center" style="position: relative; right: 35px">
+                        {% for category in post.getCategories() %}
+                            <a href="/category/{{ category.getId() }}" class="badge badge-success" style="margin: 0 5px 15px 5px">{{ category.getName() }}</a>
+                        {% endfor %}
+                    </div>
                     <p class="card-text" style="padding-bottom: 0px"> {{ post.getDescription() }} </p>
                     <p class="card-text"style="padding-bottom: 20px"> {{ post.getContent() }} </p>
                     <footer class="blockquote-footer text-right">Posted the <cite title="Source Title"> {{ post.getCreatedAt()|date('d/m/Y') }} </cite></footer>
