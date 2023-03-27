@@ -31,6 +31,8 @@ class DefaultController extends AbstractController
             
             $prompt = $request->request->get('search');
 
+            $prompt = strtoupper($prompt);
+
             if (empty($prompt)) {
                 return $this -> render('post/index.post.html.twig', [
                     'posts' => [],
@@ -42,7 +44,7 @@ class DefaultController extends AbstractController
             $posts = $postRepository->findAll();
 
             foreach ($posts as $key => $post) {
-                if (strpos($post->getTitle(), $prompt) === false and strpos($post->getContent(), $prompt) === false and strpos($post->getCreator()->getEmail(), $prompt) === false) {
+                if (strpos(strtoupper($post->getTitle()), $prompt) === false and strpos(strtoupper($post->getContent()), $prompt) === false and strpos(strtoupper($post->getCreator()->getEmail()), $prompt) === false) {
                     unset($posts[$key]);
                 }
             }
