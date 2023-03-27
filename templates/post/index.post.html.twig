@@ -7,7 +7,30 @@
             No posts found.
         </div>
     {% else %}
-        <h2 class="text-center" style="padding-top: 20px"> All the posts : </h2>
+        <div class="d-flex justify-content-center" style="padding-top: 20px">
+            <div class="dropdown" style="margin-right: 30px">
+                <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if mode == 0 %}
+                        Random
+                    {% elseif mode == 1 %}
+                        Most recent
+                    {% elseif mode == 2 %}
+                        Least recent
+                    {% else %}
+                        Best rated
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/posts/mode/0">Random</a>
+                    <a class="dropdown-item" href="/posts/mode/1">Most recent</a>
+                    <a class="dropdown-item" href="/posts/mode/2">Least recent</a>
+                    <a class="dropdown-item" href="/posts/mode/3">Best rated</a>
+                </div>
+            </div>
+
+            <h2 class="text-center" class="margin-left: 30px"> All the posts : </h2>
+
+        </div>
     {% endif %}
 
     <div class="d-flex flex-wrap justify-content-center" style="padding-bottom:70px">

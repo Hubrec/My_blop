@@ -19,18 +19,35 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class PostController extends AbstractController
 {
-    #[Route('/posts', name: 'posts')]
-    public function index(ManagerRegistry $doctrine, LoggerInterface $logger): Response
+    #[Route('/posts/mode/{mode}', name: 'posts')]
+    public function index(ManagerRegistry $doctrine, LoggerInterface $logger, int $mode): Response
     {
         $logger->info('posts page is being accessed');
 
         $postRepository = $doctrine->getRepository(\App\Entity\Post::class);
         $posts = $postRepository->findAll();
 
-        shuffle($posts);
+        if ($mode == 0) {
+            shuffle($posts);
+        } else if ($mode == 1) {
+            usort($posts, function ($a, $b) {
+                return $a->getUpdateAt() <=> $b->getUpdateAt();
+            });
+            $posts = array_reverse($posts);
+        } else if ($mode ==2) {
+            usort($posts, function ($a, $b) {
+                return $a->getUpdateAt() <=> $b->getUpdateAt();
+            });
+        } else {
+            usort($posts, function ($a, $b) {
+                return $a->getVotes()->count() <=> $b->getVotes()->count();
+            });
+            $posts = array_reverse($posts);
+        }
 
         return $this -> render('post/index.post.html.twig', [
             'posts' => $posts,
+            'mode' => $mode,
         ]);
     }
 
