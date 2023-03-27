@@ -102,6 +102,14 @@ class UserController extends AbstractController
             }
         }
 
+        if ($user->getVotes() !== null) {
+            foreach ($user->getVotes() as $vote) {
+                $entityManager = $doctrine->getManager();
+                $entityManager->remove($vote);
+                $entityManager->flush();
+            }
+        }
+
         $entityManager = $doctrine->getManager();
         $entityManager->remove($user);
         $entityManager->flush();

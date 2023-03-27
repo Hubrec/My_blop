@@ -280,7 +280,7 @@ class PostController extends AbstractController
         $entityManager->remove($post);
         $entityManager->flush();
 
-        return $this->redirectToRoute('posts');
+        return $this->redirectToRoute('posts', ['mode' => 0]);
     }
 
     #[Route('/comment/{id}/delete', name: 'comment_delete')]
