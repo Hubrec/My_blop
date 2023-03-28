@@ -16,9 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 
-
+// post controller that manage the post pages
 class PostController extends AbstractController
 {
+    // show the post page with differents modes to display the posts
     #[Route('/posts/mode/{mode}', name: 'posts')]
     public function index(ManagerRegistry $doctrine, LoggerInterface $logger, int $mode): Response
     {
@@ -27,18 +28,19 @@ class PostController extends AbstractController
         $postRepository = $doctrine->getRepository(\App\Entity\Post::class);
         $posts = $postRepository->findAll();
 
-        if ($mode == 0) {
+        // sort the posts depending on the mode
+        if ($mode == 0) { // random
             shuffle($posts);
-        } else if ($mode == 1) {
+        } else if ($mode == 1) { // last updated
             usort($posts, function ($a, $b) {
                 return $a->getUpdateAt() <=> $b->getUpdateAt();
             });
             $posts = array_reverse($posts);
-        } else if ($mode ==2) {
+        } else if ($mode ==2) { // first updated
             usort($posts, function ($a, $b) {
                 return $a->getUpdateAt() <=> $b->getUpdateAt();
             });
-        } else {
+        } else { // most voted
             usort($posts, function ($a, $b) {
                 return $a->getVotes()->count() <=> $b->getVotes()->count();
             });
@@ -51,11 +53,13 @@ class PostController extends AbstractController
         ]);
     }
 
+    // new post page
     #[Route('/post/new', name: 'new_post')]
     public function new(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger): Response
     {
         $logger->info('New post page is being accessed');
 
+        // if the user is not logged in, redirect to the login page
         if ($this->getUser() === null) {
             return $this->redirectToRoute('app_login');
         }
@@ -63,13 +67,16 @@ class PostController extends AbstractController
         $options = $doctrine->getRepository(Category::class)->findAll();
         $opt = [];
 
+        // create an array with the categories
         foreach ($options as $option) {
             $opt[$option->getId()] = $option->getName();
         }
 
+        // create the form for the new post
         $form = $this->createForm(NewPostFormType::class, $opt);
         $form->handleRequest($request);
 
+        // if the form is submitted and valid, create the post
         if ($form->isSubmitted() && $form->isValid()) {
 
             $post = new Post();
@@ -99,6 +106,7 @@ class PostController extends AbstractController
         ]);
     }
 
+    // show the post page
     #[Route('/post/{id}', name: 'post_show')]
     public function show(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
@@ -113,6 +121,7 @@ class PostController extends AbstractController
             );
         }
 
+        // count the votes
         $votes = 0;
         foreach ($post->getVotes() as $vote) {
             if ($vote->isState()) {
@@ -124,6 +133,7 @@ class PostController extends AbstractController
 
         $user = $this->getUser();
 
+        // check if the user has already voted
         if ($user !== null) {
             foreach ($post->getVotes() as $vote) {
                 if ($vote->getUser() === $user) {
@@ -143,9 +153,11 @@ class PostController extends AbstractController
             $downVoted = false;
         }
 
+        // get the comments
         $commentRepository = $doctrine->getRepository(\App\Entity\Comment::class);
         $comments = $commentRepository->findBy(['post' => $post]);
 
+        // create the form for the new comment
         $comment = new Comment();
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
@@ -180,11 +192,13 @@ class PostController extends AbstractController
         ]);
     }
 
+    // edit the post page
     #[Route('/post/{id}/edit', name: 'post_edit')]
     public function edit(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
         $logger->info('Post/'. $id . ' edit page is being accessed');
 
+        // if the user is not logged in, redirect to the login page
         if ($this->getUser() === null) {
             return $this->redirectToRoute('app_login');
         }
@@ -192,6 +206,7 @@ class PostController extends AbstractController
         $postRepository = $doctrine->getRepository(\App\Entity\Post::class);
         $post = $postRepository->find($id);
 
+        // if the user is not the creator of the post or an admin, redirect to the post page
         if ($this->getUser()->getId() !== $post->getCreator()->getId() && $this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
             return $this->redirectToRoute('post_show', ['id' => $id]);
         }  
@@ -211,6 +226,7 @@ class PostController extends AbstractController
 
         $opt[1] = $post;
 
+        // create the form for editing post
         $form = $this->createForm(EditPostFormType::class, $opt);
         $form->handleRequest($request);
 
@@ -221,6 +237,7 @@ class PostController extends AbstractController
             $post->setContent($form->get('content')->getData());
             $post->setUpdateAt(new \DateTimeImmutable());
 
+            // update the categories for the post if the user has selected some new ones
             if (sizeof($form->get('categories')->getData()) !== 0) {
                 foreach ($post->getCategories() as $category) {
                     $post->removeCategory($category);
@@ -246,11 +263,13 @@ class PostController extends AbstractController
         ]);
     }
 
+    // delete the post page
     #[Route('/post/{id}/delete', name: 'post_delete')]
     public function delete(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
         $logger->info('Post/'. $id . ' delete page is being accessed');
 
+        // if the user is not logged in, redirect to the login page
         if ($this->getUser() === null) {
             return $this->redirectToRoute('app_login');
         }
@@ -264,10 +283,12 @@ class PostController extends AbstractController
             );
         }
 
+        // if the user is not the creator of the post or an admin, redirect to the post page and don't allow to delete the post
         if ($this->getUser()->getId() !== $post->getCreator()->getId() && $this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
             return $this->redirectToRoute('post_show', ['id' => $id]);
         }
 
+        // delete the comments for the post before deleting the post
         if ($post->getComments() !== null) {
             foreach ($post->getComments() as $comment) {
                 $entityManager = $doctrine->getManager();
@@ -283,11 +304,13 @@ class PostController extends AbstractController
         return $this->redirectToRoute('posts', ['mode' => 0]);
     }
 
+    // delete a comment page
     #[Route('/comment/{id}/delete', name: 'comment_delete')]
     public function deleteComment(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
         $logger->info('Comment/'. $id . ' delete page is being accessed');
 
+        // if the user is not logged in, redirect to the login page
         if ($this->getUser() === null) {
             return $this->redirectToRoute('app_login');
         }
@@ -301,6 +324,8 @@ class PostController extends AbstractController
             );
         }
 
+        // if the user is not the creator of the post or an admin, redirect to the post page and don't allow to delete the comment7
+        // this means that the creator of the post can delete the comments for the post
         if ($this->getUser()->getId() !== $comment->getPost()->getCreator()->getId() && $this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
             return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
         }        

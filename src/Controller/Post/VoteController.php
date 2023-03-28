@@ -12,13 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 
-
+// vote controller that manage the votes on posts
 class VoteController extends AbstractController
 {
-
+    // upvote function that upvote a post
     #[Route('/post/{id}/upvote', name: 'post_upvote')]
     public function upvote(ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
+        // check if the user is logged in
         $user = $this->getUser();
         if (!$user instanceof User) {
             $logger->error('User not found');
@@ -32,11 +33,13 @@ class VoteController extends AbstractController
             return $this->redirectToRoute('post_index');
         }
 
+        // get the vote of the user on the post
         $vote = $doctrine->getRepository(Vote::class)->findOneByUserAndPost([
             'Post' => $post,
             'User' => $user,
         ]);
 
+        // if the vote exist on the related post, change the state of the vote or cancel the vote if the state is the same
         if ($vote instanceof Vote) {
             if ($vote->isState()) {
                 $doctrine->getManager()->remove($vote);
@@ -58,9 +61,11 @@ class VoteController extends AbstractController
         return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
     }
 
+    // downvote function that downvote a post
     #[Route('/post/{id}/downvote', name: 'post_downvote')]
     public function downvote(ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
+        // check if the user is logged in
         $user = $this->getUser();
         if (!$user instanceof User) {
             $logger->error('User not found');
@@ -74,11 +79,13 @@ class VoteController extends AbstractController
             return $this->redirectToRoute('post_index');
         }
 
+        // get the vote of the user on the post
         $vote = $doctrine->getRepository(Vote::class)->findOneByUserAndPost([
             'Post' => $post,
             'User' => $user
         ]);
 
+        // if the vote exist on the related post, change the state of the vote or cancel the vote if the state is the same
         if ($vote instanceof Vote) {
             if (!$vote->isState()) {
                 $doctrine->getManager()->remove($vote);

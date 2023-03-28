@@ -12,9 +12,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Form\NewCategoryFormType;
 
+// category controller that manage the category page
 class CategoryController extends AbstractController
 {
 
+    // browse all the categories
     #[Route('/categories', name: 'categories_browse')]
     public function index(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger): Response
     {
@@ -29,12 +31,15 @@ class CategoryController extends AbstractController
             );
         }
 
+        // shuffle the categories in a random order
         shuffle($categories);
 
+        // create the form for the new category
         $category = new Category();
         $form = $this->createForm(NewCategoryFormType::class, $category);
         $form->handleRequest($request);
 
+        // if the form is submitted and valid, check if the category already exists
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ($this->getUser() === null) {
@@ -62,6 +67,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    // create a new category
     #[Route('/category/new', name: 'new_category')]
     public function new(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger): Response
     {
@@ -71,6 +77,7 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        // create the form for the new category
         $category = new Category();
         $form = $this->createForm(NewCategoryFormType::class, $category);
         $form->handleRequest($request);
@@ -100,6 +107,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    // show a category and all the posts containing this category
     #[Route('/category/{id}', name: 'category_browse')]
     public function show(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
@@ -122,11 +130,13 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    // delete a category
     #[Route('/category/{id}/delete', name: 'category_edit')]
     public function edit(Request $request, ManagerRegistry $doctrine, LoggerInterface $logger, int $id): Response
     {
         $logger->info('category delete page is being accessed');
 
+        // check if the user is an admin
         if ($this->getUser() === null) {
             return $this->redirectToRoute('categories_browse');
         }
@@ -146,9 +156,10 @@ class CategoryController extends AbstractController
 
         $entityManager = $doctrine->getManager();
 
+        // remove all categories from the posts
         $posts = $category->getPosts();
         for ($i = 0; $i < count($posts); $i++) {
-            $posts[$i]->removeCategory($category);
+            $posts[$i]->removeCategory($category); // maybe add a feature that delete the post if no longer a category
             $entityManager->persist($posts[$i]);
         }
 
