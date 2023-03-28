@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{# block that display all the categories and a form for new categories #}
 {% block body %}
     
+    {# if there are no categories, display this error message #}
     {% if categories|length == 0 %}
         <div class="alert alert-warning" role="alert">
             No categories for now, be the first to add one !

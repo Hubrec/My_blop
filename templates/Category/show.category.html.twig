@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{# block that show all the posts of one specific category #}
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') and user.getRoles()[0] == 'ROLE_ADMIN' %}
         <div class="d-flex align-items-center justify-content-center">

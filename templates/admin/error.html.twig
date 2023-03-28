@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{# block that pop if the user try to acess admin page not as admin #}
 {% block body %}
     <div class="alert alert-warning" role="alert">
         Oops! Something went wrong. It seems that you aren't admin because your currents roles is ( {{ user.getRoles()[0]|lower }} ), try to login as admin.
