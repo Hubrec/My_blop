@@ -13,6 +13,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
+/**
+ * The edit post form is a form that allow the user to edit a post.
+ * It is used in the EditPostController.
+ * It is very similar to the NewPostFormType.
+ */
 class EditPostFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

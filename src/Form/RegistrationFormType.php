@@ -13,6 +13,10 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * The registration form is a form that allow the user to create a new account.
+ * It is used in the registration controller.
+ */
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

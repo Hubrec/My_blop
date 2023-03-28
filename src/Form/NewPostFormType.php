@@ -13,6 +13,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
+/**
+ * The new post form is a form that allow the user to create a new post.
+ * It is used in the PostController.
+ */
 class NewPostFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

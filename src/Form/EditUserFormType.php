@@ -13,6 +13,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
+/**
+ * The edit user form is a form that allow the user to edit his profile.
+ * It is used in the UserController.
+ */
 class EditUserFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

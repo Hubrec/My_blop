@@ -14,6 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
+/**
+ * The new category form is a form that allow the user to create a new category.
+ * It is used in the CategoryController.
+ */
 class NewCategoryFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

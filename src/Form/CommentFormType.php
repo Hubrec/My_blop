@@ -14,6 +14,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
+/**
+ * The comment form type is a form that allow the user to create a new comment.
+ * It is used in the PostController.
+ */
 class CommentFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
