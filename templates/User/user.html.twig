@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ user.getUsername() }}{% endblock %}
+
 {# block that display the logged user profile and all his posts #}
 {% block body %}
     <div class="container py-5">

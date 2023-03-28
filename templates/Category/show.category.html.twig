@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ category.getName() }}{% endblock %}
+
 {# block that show all the posts of one specific category #}
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') and user.getRoles()[0] == 'ROLE_ADMIN' %}

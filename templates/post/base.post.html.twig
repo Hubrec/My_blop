@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ post.getTitle() }}{% endblock %}
+
 {# block that display a post, the comments of the post and the comment form #}
 {% block body %}
 
