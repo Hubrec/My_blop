@@ -20,21 +20,21 @@ You can become a member right now and post everything you want on [myblop.mathis
 ## Visuals
 
 Here below are the different visuals of the application :
- - the homepage
+ - the homepage :
 
-    ![image 1](./ressources/visuel1.png "écran d'accueil")
+    ![image 1](./repo-ressources/home.png "homepage")
 
- - the page of one post
+ - the page of one post :
 
-    ![image 2](./ressources/visuel2.png "écran paramètres")
+    ![image 2](./repo-ressources/post.png "post screen")
 
- - the categories page
+ - the categories page :
 
-    ![image 3](./ressources/visuel3.png "écran de jeu")
+    ![image 3](./repo-ressources/categories.png "categories screen")
 
- - the user page
+ - the user profile page :
 
-    ![image 3](./ressources/visuel3.png "écran de jeu")
+    ![image 3](./repo-ressources/profile.png "user profile page")
 
 I let you discover more in depth the site by yourselves!
 
@@ -55,4 +55,5 @@ This project is under a MIT liscence described in the [LICENCE.txt](./LICENCE.tx
 
 ## Project status
 
-The porject is on a stable version and I didn't planned to change it for now.
+The project is on a stable version and I didn't planned to change it for now.
+Since it's a evaluated project, update it after the due date dosen't really make sense either.
